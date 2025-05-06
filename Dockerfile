@@ -8,4 +8,5 @@ WORKDIR /app
 COPY calc.py .
 
 # Run the script on container start
-CMD ["python", "calc.py"]
+
+CMD ["python", "calc.py"
