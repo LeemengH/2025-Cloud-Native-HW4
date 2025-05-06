@@ -1,5 +1,5 @@
 # 2025-Cloud-Native-HW4
-This repo is for Assugnment 04 of  2025 Cloud Native in NTU
+This repo is for Assignment 04 of  2025 Cloud Native in NTU
 
 ### Clone the repo and navigate to the project directory:
 ```bash=
