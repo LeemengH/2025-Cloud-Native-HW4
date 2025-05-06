@@ -1,0 +1,47 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    paths:
+      - 'Dockerfile'
+      - 'setup.txt'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Read push flag and tag from setup.txt
+      id: setup
+      run: |
+        PUSH_FLAG=$(grep -i '^push=' setup.txt | cut -d'=' -f2 | tr -d '\r')
+        TAG=$(grep -i '^tag=' setup.txt | cut -d'=' -f2 | tr -d '\r')
+        echo "push_flag=$PUSH_FLAG" >> $GITHUB_OUTPUT
+        echo "image_tag=$TAG" >> $GITHUB_OUTPUT
+
+    - name: Exit if push is not true
+      if: steps.setup.outputs.push_flag != 'true'
+      run: echo "Push flag is not true. Skipping Docker build and push."
+
+    - name: Log in to DockerHub
+      if: steps.setup.outputs.push_flag == 'true'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build Docker image
+      if: steps.setup.outputs.push_flag == 'true'
+      run: docker build -t leemng/2025cloud:${{ steps.setup.outputs.image_tag }} .
+
+    - name: Test Docker image
+      if: steps.setup.outputs.push_flag == 'true'
+      run: |
+        docker run --rm leemng/2025cloud:${{ steps.setup.outputs.image_tag }} echo "Test OK"
+
+    - name: Push Docker image
+      if: steps.setup.outputs.push_flag == 'true'
+      run: docker push leemng/2025cloud:${{ steps.setup.outputs.image_tag }}
