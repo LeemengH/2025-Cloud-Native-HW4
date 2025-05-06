@@ -1,6 +1,6 @@
 # 2025-Cloud-Native-HW4
 This repo is for Assignment 04 of  2025 Cloud Native in NTU
----
+Docker hub repo: [link](https://hub.docker.com/r/leemng/2025cloud/)
 ## Build and Run the image
 ### Clone the repo and navigate to the project directory:
 ```bash=
